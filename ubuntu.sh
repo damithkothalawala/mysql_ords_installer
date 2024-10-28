@@ -87,6 +87,7 @@ sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
 sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT
 sudo ufw allow 80
 sudo ufw allow 443 
+sudo iptables -F
 
 # Install Java if not installed
 if ! is_package_installed openjdk-11-jdk-headless; then
@@ -129,12 +130,12 @@ sudo mysql -e "CREATE USER IF NOT EXISTS 'ords_demo'@'localhost' IDENTIFIED BY '
 echo "Configuring ORDS..."
 ORDS_CONFIG_DIR="/opt/oracle/ords/config"
 sudo mkdir -p "$ORDS_CONFIG_DIR"
-sudo ords --config "$ORDS_CONFIG_DIR" config set db.api.enabled true
-sudo ords --config "$ORDS_CONFIG_DIR" config --db-pool ords_demo set db.connectionType customurl
-sudo ords --config "$ORDS_CONFIG_DIR" config --db-pool ords_demo set db.customURL "jdbc:mysql://localhost/employees?sslMode=REQUIRED"
-sudo ords --config "$ORDS_CONFIG_DIR" config --db-pool ords_demo set db.username ords_demo
-sudo ords --config "$ORDS_CONFIG_DIR" config --db-pool ords_demo set db.credentialsSource request
-sudo ords --config "$ORDS_CONFIG_DIR" config --db-pool ords_demo set restEnabledSql.active true
+sudo /opt/oracle/ords/bin/ords --config "$ORDS_CONFIG_DIR" config set db.api.enabled true
+sudo /opt/oracle/ords/bin/ords --config "$ORDS_CONFIG_DIR" config --db-pool ords_demo set db.connectionType customurl
+sudo /opt/oracle/ords/bin/ords --config "$ORDS_CONFIG_DIR" config --db-pool ords_demo set db.customURL "jdbc:mysql://localhost/employees?sslMode=REQUIRED"
+sudo /opt/oracle/ords/bin/ords --config "$ORDS_CONFIG_DIR" config --db-pool ords_demo set db.username ords_demo
+sudo /opt/oracle/ords/bin/ords --config "$ORDS_CONFIG_DIR" config --db-pool ords_demo set db.credentialsSource request
+sudo /opt/oracle/ords/bin/ords --config "$ORDS_CONFIG_DIR" config --db-pool ords_demo set restEnabledSql.active true
 echo -n "$password" | sudo ords --config "$ORDS_CONFIG_DIR" config --db-pool ords_demo secret --password-stdin db.password
 
 # Start ORDS on port 1987

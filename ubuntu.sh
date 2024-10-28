@@ -140,7 +140,7 @@ echo -n "$password" | sudo ords --config "$ORDS_CONFIG_DIR" config --db-pool ord
 
 # Start ORDS on port 1987
 echo "Starting ORDS on port 1987..."
-sudo ords --config "$ORDS_CONFIG_DIR" serve --port 1987 &
+sudo /opt/oracle/ords/bin/ords --config "$ORDS_CONFIG_DIR" serve --port 1987 &
 
 # Wait for ORDS to start
 echo "Waiting for ORDS to initialize..."

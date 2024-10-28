@@ -160,6 +160,8 @@ if [ ! -f /etc/apache2/sites-available/ords.conf ]; then
     echo "Configuring Apache virtual host..."
     nip_domain=$(curl -s https://api.ipify.org | sed -e 's/\./-/g').nip.io
 
+    sudo su -c "echo 127.0.0.1 $nip_domain >> /etc/hosts"
+
     cat <<EOF | sudo tee /etc/apache2/sites-available/ords.conf
 <VirtualHost *:80>
     ServerName $nip_domain
@@ -169,9 +171,9 @@ if [ ! -f /etc/apache2/sites-available/ords.conf ]; then
     </Proxy>
     ProxyPreserveHost On
 
-    ProxyPass /ords http://localhost:1987/ords
-    ProxyPassReverse /ords http://localhost:1987/ords
-
+    ProxyPass /ords http://$nip_domain:1987/ords
+    ProxyPassReverse /ords http://$nip_domain:1987/ords
+    RequestHeader set X-Forwarded-Proto "https"
     RequestHeader set X-Forwarded-Host "$nip_domain"
     RequestHeader set Host "$nip_domain"
 </VirtualHost>

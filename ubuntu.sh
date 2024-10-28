@@ -82,9 +82,11 @@ if ! command -v certbot &> /dev/null; then
 fi
 
 # Configure firewall rules with iptables
-echo "Configuring firewall rules with iptables..."
+echo "Configuring firewall rules with ufw and iptables."
 sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
 sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+sudo ufw allow 80
+sudo ufw allow 443 
 
 # Install Java if not installed
 if ! is_package_installed openjdk-11-jdk-headless; then
@@ -112,7 +114,7 @@ if [ ! -f /opt/oracle/ords/lib/ext/mysql-connector-java-9.1.0.jar ]; then
     sudo wget -O /opt/oracle/downloads/mysql-connector-j_9.1.0-1ubuntu22.04_all.deb 'https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-j_9.1.0-1ubuntu22.04_all.deb'
     sudo dpkg -i /opt/oracle/downloads/mysql-connector-j_9.1.0-1ubuntu22.04_all.deb
     sudo mkdir -p /opt/oracle/ords/lib/ext/
-    sudo cp /usr/share/java/mysql-connector-java-9.1.0.jar /opt/oracle/ords/lib/ext/
+    sudo cp /usr/share/java/mysql-connector-* /opt/oracle/ords/lib/ext/
 fi
 
 # Generate a random password for ords_demo user

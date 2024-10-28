@@ -174,7 +174,7 @@ EOF
 
     # Obtain SSL certificate with Certbot
     echo "Obtaining SSL certificate with Certbot..."
-    sudo certbot --apache --agree-tos --no-eff-email --email no-reply@example.com -d "$nip_domain"
+    sudo certbot --apache --agree-tos --no-eff-email --register-unsafely-without-email -d "$nip_domain"
 fi
 
 # Print the domain to access ORDS

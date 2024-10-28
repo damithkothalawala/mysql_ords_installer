@@ -1,4 +1,5 @@
 #!/bin/bash
+clear
 cat <<EOF
 MIT License
 
@@ -21,6 +22,9 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+Please check $(pwd)/install.txt for credentials and Urls
+
 EOF
 
 # Update package list
@@ -122,6 +126,9 @@ fi
 password=$(tr -dc 'A-Za-z0-9!?%=' < /dev/urandom | head -c 16)
 echo -e "\n\nCreating MySQL user 'ords_demo' with password: $password\n\n"
 
+echo -e "\n\nCreating MySQL user 'ords_demo' with password: $password\n\n" >> $(pwd)/install.txt 
+echo -e "Test locally curl --user ords_demo:$password--request POST 'http://localhost:1987/ords/ords_demo/_/sql' --header 'Content-Type: application/sql' --data 'select * from employees.employees limit 10'" >> $(pwd)/install.txt 
+
 # Create ords_demo user and grant privileges
 echo "Creating ords_demo user and granting privileges..."
 sudo mysql -e "CREATE USER IF NOT EXISTS 'ords_demo'@'localhost' IDENTIFIED BY '$password'; GRANT ALL PRIVILEGES ON employees.* TO 'ords_demo'@'localhost';"
@@ -180,3 +187,7 @@ fi
 
 # Print the domain to access ORDS
 echo -e "\n\nORDS is now accessible at: https://$nip_domain/ords/\n\n"
+
+echo -e "\n\nORDS End Point is now accessible at: https://$nip_domain/ords/ords_demo/_sql\n\n" >> $(pwd)/install.txt 
+
+

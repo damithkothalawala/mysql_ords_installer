@@ -62,7 +62,9 @@ fi
 # Import employees database if not already imported
 if ! sudo mysql -e "USE employees" &> /dev/null; then
     echo "Importing employees database..."
+    cd /opt/oracle/downloads/test_db/
     sudo mysql < /opt/oracle/downloads/test_db/employees.sql
+    cd
 fi
 
 # Install Apache2 if not installed
@@ -127,7 +129,7 @@ password=$(tr -dc 'A-Za-z0-9!?%=' < /dev/urandom | head -c 16)
 echo -e "\n\nCreating MySQL user 'ords_demo' with password: $password\n\n"
 
 echo -e "\n\nCreating MySQL user 'ords_demo' with password: $password\n\n" >> $(pwd)/install.txt 
-echo -e "Test locally curl --user ords_demo:$password--request POST 'http://localhost:1987/ords/ords_demo/_/sql' --header 'Content-Type: application/sql' --data 'select * from employees.employees limit 10'" >> $(pwd)/install.txt 
+echo -e "Test locally curl --user ords_demo:$password --request POST 'http://localhost:1987/ords/ords_demo/_/sql' --header 'Content-Type: application/sql' --data 'select * from employees.employees limit 10'" >> $(pwd)/install.txt 
 
 # Create ords_demo user and grant privileges
 echo "Creating ords_demo user and granting privileges..."
@@ -147,7 +149,7 @@ echo -n "$password" | sudo ords --config "$ORDS_CONFIG_DIR" config --db-pool ord
 
 # Start ORDS on port 1987
 echo "Starting ORDS on port 1987..."
-sudo /opt/oracle/ords/bin/ords --config "$ORDS_CONFIG_DIR" serve --port 1987 &
+sudo su -c "/opt/oracle/ords/bin/ords --config /opt/oracle/ords/config/ serve --port 1987 &"
 
 # Wait for ORDS to start
 echo "Waiting for ORDS to initialize..."
